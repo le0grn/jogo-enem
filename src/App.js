@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { Paper, Box, Button, ButtonGroup, Container } from '@material-ui/core';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { Typography } from '@material-ui/core';
+import Grafico from './components/Grafico';
 
 const ENEMAPI_URL = "https://127.0.0.1:8000/questions/";
 
@@ -109,8 +110,8 @@ function App() {
             )}
           </Box>
         ) : (
-          <Box>
-            Fim
+          <Box height="50%" marginTop="20vh">
+            <Grafico acertos={acertos} erros={erros}/>
           </Box>
         )}
       </Container>
