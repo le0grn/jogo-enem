@@ -1,12 +1,13 @@
 
 import React from 'react';
-import { useState, useEffect } from 'react';
-import { Paper, Box, Button, ButtonGroup, Container } from '@material-ui/core';
+import { useState } from 'react';
+import { Paper, Box, Button, Container, Grid } from '@material-ui/core';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { Typography } from '@material-ui/core';
 import Grafico from './components/Grafico';
+import LinearProgressWithLabel from './components/LinearProgressWithLabel';
 
-const ENEMAPI_URL = "https://127.0.0.1:8000/questions/";
+import AvisoErro from './components/AvisoErro';
 
 function App() {
   const [error, setError] = useState(null);
@@ -16,12 +17,13 @@ function App() {
   const [tentativas, setTentativas] = useState(0);
   const [acertos, setAcertos] = useState(0);
   const [erros, setErros] = useState(0);
+  const [avisoErro, setAvisoErro] = useState(false);
 
   const estrangeira = estrangeiraValue => {
     setIsLoaded(false);
     setError(null);
 
-    fetch(`/questions/enem/?estrangeira=ingles`)
+    fetch(`https://9edp0q.deta.dev/questions/`)
     .then(response => response.json())
     .then((result) => {
       setIsLoaded(true);
@@ -30,6 +32,7 @@ function App() {
     (error)=> {
       setIsLoaded(true);
       setError(error);
+      alert(error)
     });
   };
 
@@ -41,13 +44,20 @@ function App() {
       }
       setTentativas(0);
     }else{
-      alert("Não é bem isso... Pesquise o conteúdo e volte aqui com a resposta correta!")
+      setAvisoErro(true);
       if(tentativas===0){
         setErros(erros+1)
       }
       setTentativas(tentativas+1)
     }
   }
+
+  const handleCloseAvisoErro = (reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setAvisoErro(false);
+  };
 
   return (
     <React.Fragment>
@@ -88,26 +98,39 @@ function App() {
           </Box>
         ) : typeof questions[questionIterator] !== 'undefined'?(
           <Box p={1} height="85%" display="flex" flexDirection="column" justifyContent="space-evenly" alignItems="center">
-            <Typography>
-              (ENEM-{questions[questionIterator].ano})
-            </Typography>
-            <Typography>
-              {questions[questionIterator].titulo}
-            </Typography>
-            <Typography>
-              {questions[questionIterator].texto}
-            </Typography>
-            <Typography>
-              {questions[questionIterator].fonte}
-            </Typography>
-            <Typography>
-              {questions[questionIterator].enunciado}
-            </Typography>
-            {questions[questionIterator].alternativas.map((alternativa) =>
-              <Button onClick={() => verificaAlternativa(alternativa.isCorrect)} variant="contained" color="primary">
-                {alternativa.texto}
-              </Button>
-            )}
+            <Grid container spacing={2}
+            justifyContent="center"
+            alignItems="center">
+              <Grid item xs={12}>
+                <Typography align="justify">
+                  (ENEM - {questions[questionIterator].ano}) - {questions[questionIterator].titulo}
+                </Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <Typography align="justify">
+                  {questions[questionIterator].texto}
+                </Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <Typography align="right">
+                  {questions[questionIterator].fonte}
+                </Typography>
+              </Grid>
+              <Grid item xs={12} >
+                <Typography align="justify">
+                  {questions[questionIterator].enunciado}
+                </Typography>
+              </Grid>
+              {questions[questionIterator].alternativas.map((alternativa) =>
+                <Grid item xs={12}>
+                  <Button onClick={() => verificaAlternativa(alternativa.isCorrect)} variant="contained" color="primary">
+                    {alternativa.texto}
+                  </Button>
+                </Grid>
+              )}
+              <LinearProgressWithLabel value={questionIterator} length={questions.length}/>
+            </Grid>
+            <AvisoErro open={avisoErro} handleClose={handleCloseAvisoErro}/>
           </Box>
         ) : (
           <Box height="50%" marginTop="20vh">
