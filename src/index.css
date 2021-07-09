@@ -1,6 +1,14 @@
+.grafico {
+  margin-top: 100px;
+}
+
 @media (min-height: 900px){
   html, body, #root, .App {
     height: 100%;
+  }
+  
+  .grafico {
+    margin-top: 200px;
   }
 }
 

@@ -133,7 +133,7 @@ function App() {
             <AvisoErro open={avisoErro} handleClose={handleCloseAvisoErro}/>
           </Box>
         ) : (
-          <Box height="50%" marginTop="20vh">
+          <Box className="grafico" height="500px">
             <Grafico acertos={acertos} erros={erros}/>
           </Box>
         )}
