@@ -23,7 +23,7 @@ function App() {
     setIsLoaded(false);
     setError(null);
 
-    fetch(`https://9edp0q.deta.dev/questions/enem/${estrangeiraValue}`)
+    fetch(`https://9edp0q.deta.dev/questions/enem/?estrangeira=${estrangeiraValue}`)
     .then(response => response.json())
     .then((result) => {
       setIsLoaded(true);
